@@ -5,13 +5,37 @@ using System.Linq;
 
 namespace oop_team_project
 {
-    internal class BattleManager
+    internal class BattleGame
     {
         private Team heroTeam;
         private Team monsterTeam;
         private Random random;
+        private int round = 1;
+        private static int GetSafeInput()
+        {
+            try
+            {
+                return int.Parse(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("숫자만 입력 가능합니다. (0으로 처리)");
+                return 0;
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("너무 큰 숫자입니다. (0으로 처리)");
+                return 0;
+            }
+        }
 
-        public BattleManager()
+        public void LogInfo<T>(T data)
+        {
+            Console.WriteLine("LOG " + data.ToString());
+        }
+        public void LogInfo(string msg, int level) { Console.WriteLine("LV" + level + " LOG: " + msg); }
+
+        public BattleGame()
         {
             random = new Random();
             heroTeam = new Team();
@@ -24,6 +48,16 @@ namespace oop_team_project
             monsterTeam.AddMember(new Chimera());
             monsterTeam.AddMember(new BossMonster());
             monsterTeam.AddMember(new Dragon());
+
+
+            foreach (Creature hero in heroTeam.Members)
+            {
+                hero.OnDead = NotificationDeath;
+            }
+            foreach (Creature monster in monsterTeam.Members)
+            {
+                monster.OnDead = NotificationDeath;
+            }
         }
 
         public void StartGame()
@@ -36,6 +70,8 @@ namespace oop_team_project
 
             while (!heroTeam.IsAllDead() && !monsterTeam.IsAllDead())
             {
+                Console.WriteLine();
+                Console.WriteLine( "<" + round + " 라운드>");
                 if (select == 1)
                 {
                     PlayerTurn(heroTeam, monsterTeam);
@@ -47,6 +83,7 @@ namespace oop_team_project
                     EnemyTurn(heroTeam, monsterTeam);
                 }
             }
+            round++;
 
             if (heroTeam.IsAllDead())
             {
@@ -64,51 +101,39 @@ namespace oop_team_project
             {
                 ShowStatus();
 
-                Console.WriteLine("공격할 캐릭터를 선택해주세요.");
-                Console.WriteLine("캐릭터 목록");
+                int currentHp;
+                int currentAtk;
+                myTeam[0].GetQuickStats(out currentHp, out currentAtk);
+                LogInfo("현재 " + myTeam[0].Name + " 상태 - HP: " + currentHp, 1);
 
-                for (int i = 0; i < myTeam.Members.Count; i++)
-                {
-                    Creature targets = enemyTeam.Members[i];
-                    Console.WriteLine(
-                        (i + 1) + ". " + targets.Name + " HP : " + targets.CurrentHp + "/" + targets.MaxHp
-                    );
-                }
+                Console.WriteLine("캐릭터를 선택해주세요");
+                int attackerIndex = GetSafeInput() - 1; // [GetSafeInput 참조 발생]
 
-                int attackerIndex = int.Parse(Console.ReadLine()) - 1;
-
-                Creature attacker = myTeam.Members[attackerIndex];
-
-                Console.WriteLine("스킬 선택");
-
+                Creature attacker = myTeam[attackerIndex];
                 attacker.ShowSkills();
 
-                int skill = int.Parse(Console.ReadLine());
+                Console.Write("스킬 입력 : ");
+                int skill = GetSafeInput();
 
                 Console.WriteLine("공격 대상 선택");
+                int targetIndex = GetSafeInput() - 1;
+                Creature target = enemyTeam[targetIndex];
 
-                for (int i = 0; i < enemyTeam.Members.Count; i++)
+                Random r = new Random();
+                if (r.Next(0, 100) < 20)
                 {
-                    Console.WriteLine($"{i + 1}. {enemyTeam.Members[i].Name}");
+                    target.TakeDamage(attacker.AttackPower, "20% 확률로 크리티컬");
+                }
+                else
+                {
+                    attacker.UseSkill(skill, target);
                 }
 
-                int targetIndex = int.Parse(Console.ReadLine()) - 1;
-
-                Creature target = enemyTeam.Members[targetIndex];
-
-                attacker.UseSkill(skill, target);
+                attacker.Heal(200, "20% 확률로 히어로팀 200 힐");
             }
-            catch (FormatException)
+            catch (Exception ex)
             {
-                Console.WriteLine("숫자를 입력해주세요.");
-            }
-            catch (InvalidSkillException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Console.WriteLine("차례 종료");
+                Console.WriteLine("에러 발생: " + ex.Message);
             }
         }
 
@@ -132,7 +157,6 @@ namespace oop_team_project
         private void ShowStatus()
         {
             Console.WriteLine("<HERO TEAM>");
-
             foreach (Creature hero in heroTeam.Members)
             {
                 hero.ShowStatus();
@@ -141,13 +165,17 @@ namespace oop_team_project
             Console.WriteLine();
 
             Console.WriteLine("<MONSTER TEAM>");
-
             foreach (Creature monster in monsterTeam.Members)
             {
                 monster.ShowStatus();
             }
 
             Console.WriteLine();
+        }
+
+        private void NotificationDeath(Creature deathCharacter)
+        {
+            Console.WriteLine("\n<알림>" + deathCharacter.Name + "게임에서 제외\n");
         }
     }
 }

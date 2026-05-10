@@ -87,13 +87,17 @@ namespace oop_team_project
 
         public override void TakeDamage(int damage)
         {
-            int reducedDamage = (int)(damage * (1 - DefenseRate));
+            int finalDamage = (int)(damage * (1 - DefenseRate));
 
             if (IsDefenseMode)
             {
-                reducedDamage /= 2;
-                Console.WriteLine("철벽 방어 시전. 피해가 감소합니다.");
+                finalDamage /= 2;
+                Console.WriteLine("철벽 방어 발동! 피해가 50% 감소합니다.");
+                IsDefenseMode = false;
+                Console.WriteLine(Name + "의 철벽 방어 효과가 사라졌습니다.");
             }
+
+            base.TakeDamage(finalDamage);
         }
     }
 }

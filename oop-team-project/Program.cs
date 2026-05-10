@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            BattleManager battleManager = new BattleManager();
+            BattleGame battleManager = new BattleGame();
 
             battleManager.StartGame();
         }
