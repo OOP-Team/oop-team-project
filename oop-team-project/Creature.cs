@@ -4,7 +4,7 @@ using System.Text;
 
 namespace oop_team_project
 {
-    internal abstract class Creature
+    internal abstract class Creature : IComparable<Creature>
     {
         private string name;
         private int currentHp;
@@ -12,68 +12,112 @@ namespace oop_team_project
         private int attackPower;
         private double defenseRate;
 
-        public Creature(string name, int maxHp, int attackPower, double defenseRate)
+        /*
+         * Property와 protedted setter를 사용하여 외부에서 직접 필드에 접근하지 못하도록 캡슐화
+         */
+        public string Name
         {
-            this.name = name;
-            this.maxHp = maxHp;
-            this.currentHp = maxHp;
-            this.attackPower = attackPower;
-            this.defenseRate = defenseRate;
-        }
-        public string GetName()
-        {
-            return name;
-        }
-
-        public int GetCurrentHp()
-        {
-            return currentHp;
-        }
-
-        public int GetMaxHp()
-        {
-            return maxHp;
-        }
-
-        public int GetAttackPower()
-        {
-            return attackPower;
-        }
-
-        public double GetDefenseRate()
-        {
-            return defenseRate;
-        }
-
-        public void SetName(string name) { 
-            this.name = name; 
-        }
-        public void SetCurrentHp(int hp)
-        {
-            currentHp += hp;
-
-            if (currentHp < 0)
-            {
-                currentHp = 0;
+            get { 
+                return name; 
             }
-            else if (currentHp > maxHp)
-            {
-                currentHp = maxHp;
+            protected set { 
+                name = value; 
             }
         }
 
-        public void SetMaxHp(int maxHp) {
-            this.maxHp = maxHp; 
+        public int CurrentHp
+        {
+            get { return currentHp; }
+            protected set
+            {
+                currentHp = value;
+
+                if (currentHp < 0)
+                {
+                    currentHp = 0;
+                }
+
+                if (currentHp > MaxHp)
+                {
+                    currentHp = MaxHp;
+                }
+            }
         }
-        public void SetAttackPower(int attackPower) { 
-            this.attackPower = attackPower; 
+
+        public int MaxHp
+        {
+            get { 
+                return maxHp; 
+            }
+            protected set { 
+                maxHp = value; 
+            }
         }
-        public void SetDefenseRate(double defenseRate) { 
-            this.defenseRate = defenseRate; 
+
+        public int AttackPower
+        {
+            get { 
+                return attackPower; 
+            }
+            protected set { 
+                attackPower = value; 
+            }
+        }
+
+        public double DefenseRate
+        {
+            get { 
+                return defenseRate; 
+            }
+            protected set { 
+                defenseRate = value; 
+            }
+        }
+
+        public bool IsDead
+        {
+            get { 
+                return CurrentHp <= 0; 
+            }
+        }
+
+        protected Creature(string name, int maxHp, int attackPower, double defenseRate)
+        {
+            Name = name;
+            MaxHp = maxHp;
+            CurrentHp = maxHp;
+            AttackPower = attackPower;
+            DefenseRate = defenseRate;
+        }
+
+        public virtual void TakeDamage(int damage)
+        {
+            Console.WriteLine("들어온 공격력 : " + damage);
+            Console.WriteLine(Name + " 방어율 : " + (DefenseRate * 100) + "%");
+
+            int finalDamage = (int)(damage * (1 - DefenseRate));
+            Console.WriteLine("최종 피해량 : " + finalDamage);
+            CurrentHp -= finalDamage;
+
+            Console.WriteLine(Name + "이 " + finalDamage + " 피해를 입었습니다.");
+            Console.WriteLine("남은 HP : " + CurrentHp + "/" + MaxHp);
+
+            if (IsDead)
+            {
+                Console.WriteLine(Name + " 사망했습니다.");
+            }
+        }
+
+        public virtual void Heal(int amount)
+        {
+            CurrentHp += amount;
+            Console.WriteLine(Name + "가 " + amount + " 회복했습니다.");
         }
 
         public abstract void ShowStatus();
-        public abstract void UseSkill(Creature target);
-        public abstract void Attack(Creature target);
+        public abstract void UseSkill(int skillNumber, Creature target);
+        public abstract void ShowSkills();
+
+        public int CompareTo(Creature other) => other.AttackPower.CompareTo(this.AttackPower);
     }
 }
