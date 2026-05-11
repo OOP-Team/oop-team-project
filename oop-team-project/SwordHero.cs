@@ -6,8 +6,8 @@ namespace oop_team_project
 {
     internal class SwordHero : Hero, UseSkill
     {
-        private int ChargePower = 50;
-        private int SpinSlashPower = 100;
+        private int ChargePower = 200;
+        private int SpinSlashPower = 250;
         private int JudgmentPower = 180;
         public SwordHero(string name)
             : base(name, 1400, 120, 0.1) {}

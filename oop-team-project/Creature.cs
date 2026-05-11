@@ -188,10 +188,20 @@ namespace oop_team_project
             }
         }
 
-        // out 키워드 메서드
-        public void GetQuickStats(out int hp, out int atk) {
-            hp = CurrentHp;
-            atk = AttackPower;
+        public void ApplyRoundEffect(int PowerChange, int hpChange, out int finalHp, out int finalPower) {
+            AttackPower += PowerChange;
+            CurrentHp += hpChange;
+
+            if (AttackPower < 0) {
+                AttackPower = 0;
+            }
+
+            if (CurrentHp < 0) {
+                CurrentHp = 0;
+            }
+
+            finalHp = CurrentHp;
+            finalPower = AttackPower;
         }
     }
 }

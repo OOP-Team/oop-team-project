@@ -148,7 +148,30 @@ namespace oop_team_project
 
                 int currentHp;
                 int currentAttack;
-                userTeam[0].GetQuickStats(out currentHp, out currentAttack);
+
+                if (round >= 2)
+                {
+                    foreach (Creature member in monsterTeam.Members) {
+                        if (member is BossMonster) {
+                            int hp;
+                            int power;
+                            member.ApplyRoundEffect(+20, +10, out hp, out power);
+
+                            Console.WriteLine(
+                                member.Name +" → 체력: " + hp +", 공격력: " + power);
+                        }
+                    }
+
+                    foreach (Creature member in heroTeam.Members) {
+                        if (member is SwordHero) {
+                            int hp;
+                            int power;
+                            member.ApplyRoundEffect(-20, -10, out hp, out power);
+
+                            Console.WriteLine(member.Name + " → 체력: " + hp +", 공격력: " + power);
+                        }
+                    }
+                }
 
                 Console.WriteLine("\n공격할 캐릭터를 선택해주세요 (1, 2, 3)");
                 Console.Write("입력 : ");
@@ -172,7 +195,6 @@ namespace oop_team_project
                 Console.Write("사용할 스킬 입력 : ");
                 Random r = new Random();
                 int skill = GetSafeInput();
-                int enemyIdx = GetSafeInput() - 1;
 
                 if (attacker is TankHero && (skill == 1 || skill == 2)){
                     attacker.UseSkill(skill, attacker);
@@ -182,7 +204,7 @@ namespace oop_team_project
                 }
                 else {
                     Console.Write("\n공격 대상 선택: ");
-                    
+                    int enemyIdx = GetSafeInput() - 1;
                     if (enemyIdx < 0 || enemyIdx >= enemyTeam.Members.Count){
                         Console.WriteLine("잘못된 대상 선택입니다.");
                         return;
