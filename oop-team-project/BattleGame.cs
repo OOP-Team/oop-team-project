@@ -90,6 +90,16 @@ namespace oop_team_project
                     }
                 }
                 heroTeam.Members.ForEach(m => m.UpdatePoisonStatus());
+
+                foreach (Creature member in heroTeam.Members)
+                {
+                    if (member is TankHero tank)
+                    {
+                        tank.ResetTaunt();
+                        tank.IsDefenseMode = false;
+                    }
+                }
+
                 round++;
             }
 
@@ -170,8 +180,7 @@ namespace oop_team_project
                 Console.Write("사용할 스킬 입력 : ");
                 int skill = GetSafeInput();
                 Creature enemy = null;
-                if (attacker is TankHero && skill == 2)
-                {
+                if ((attacker is TankHero && (skill == 1 || skill == 2)) || (attacker is MageHero && skill == 3)){
                     attacker.UseSkill(skill, attacker);
                 }
                 else {
@@ -205,19 +214,41 @@ namespace oop_team_project
 
         private void EnemyTurn(Team enemyTeam, Team userTeam)
         {
-            Console.WriteLine("적 차례입니다.");
+            if (enemyTeam.IsAllDead()) return;
+
+            Console.WriteLine("\n적 차례입니다.");
 
             Creature enemyAttacker = enemyTeam.Members
                 .Where(m => !m.IsDead)
                 .OrderBy(x => random.Next())
                 .First();
 
-            Creature user = userTeam.Members
-                .Where(m => !m.IsDead)
-                .OrderBy(x => random.Next())
-                .First();
+            Creature target = null;
+            foreach (Creature member in userTeam.Members)
+            {
+                if (!member.IsDead && member is TankHero tank)
+                {
+                    if (tank.IsTaunting)
+                    {
+                        target = tank;
+                        break;
+                    }
+                }
+            }
 
-            enemyAttacker.UseSkill(random.Next(1, 4), user);
+            if (target != null)
+            {
+                Console.WriteLine("\n<도발 효과!> " + enemyAttacker.Name + "이(가) 도발 중인 " + target.Name + "를 공격합니다!");
+            }
+            else
+            {
+                target = userTeam.Members
+                    .Where(m => !m.IsDead)
+                    .OrderBy(x => random.Next())
+                    .First();
+            }
+
+            enemyAttacker.UseSkill(random.Next(1, 4), target);
         }
 
         private void ShowStatus()

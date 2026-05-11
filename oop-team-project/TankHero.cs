@@ -15,8 +15,8 @@ namespace oop_team_project
             get { 
                 return isDefenseMode; 
             }
-            private set { 
-                isDefenseMode = value; 
+            set { 
+                 isDefenseMode = value;
             }
         }
 
@@ -72,6 +72,15 @@ namespace oop_team_project
             Console.WriteLine("3. 방패던지기 (" + ShieldThrowPower + " 추가피해)");
         }
 
+        public void ResetTaunt()
+        {
+            if (isTaunting)
+            {
+                isTaunting = false;
+                Console.WriteLine(Name + "의 도발 효과가 해제되었습니다.");
+            }
+        }
+
         public override void TakeDamage(int damage)
         {
             int finalDamage = (int)(damage * (1 - DefenseRate));
@@ -80,8 +89,6 @@ namespace oop_team_project
             {
                 finalDamage /= 2;
                 Console.WriteLine("피해가 50% 감소합니다.");
-                IsDefenseMode = false;
-                Console.WriteLine(Name + "의 철벽 방어 효과가 사라졌습니다.");
             }
 
             base.TakeDamage(finalDamage);
