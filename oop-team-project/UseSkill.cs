@@ -4,8 +4,7 @@ using System.Text;
 
 namespace oop_team_project
 {
-    internal interface UseSkill
-    {
+    internal interface UseSkill {
         void UseSkill(int skillNumber, Creature target);
     }
 }

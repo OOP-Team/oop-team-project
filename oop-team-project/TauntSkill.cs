@@ -4,8 +4,7 @@ using System.Text;
 
 namespace oop_team_project
 {
-    internal interface TauntSkill
-    {
+    internal interface TauntSkill {
         void TauntSkill();
     }
 }

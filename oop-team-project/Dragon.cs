@@ -14,15 +14,12 @@ namespace oop_team_project
         public Dragon(string name)
             : base(name, 2500, 170, 0.15) { }
 
-        public override void ShowStatus()
-        {
+        public override void ShowStatus() {
             Console.WriteLine("3. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature hero)
-        {
-            switch (skillNumber)
-            {
+        public override void UseSkill(int skillNumber, Creature hero) {
+            switch (skillNumber) {
                 case 1:
                     BreathSkill(hero);
                     break;
@@ -37,27 +34,23 @@ namespace oop_team_project
             }
         }
 
-        public override void ShowSkills()
-        {
+        public override void ShowSkills() {
             Console.WriteLine("1. 브레스 (" + BreathPower + " 추가피해)");
             Console.WriteLine("2. 역린   (" + WrathPower + " 추가피해)");
             Console.WriteLine("3. 돌진   (" + DashPower + " 추가피해)");
         }
 
-        private void BreathSkill(Creature hero)
-        {
+        private void BreathSkill(Creature hero) {
             Console.WriteLine(Name + "의 브레스 공격");
             hero.TakeDamage(AttackPower + BreathPower);
         }
 
-        private void WrathSkill(Creature hero)
-        {
+        private void WrathSkill(Creature hero) {
             Console.WriteLine(Name + "의 역린");
             hero.TakeDamage(AttackPower + WrathPower);
         }
 
-        private void DashSkill(Creature hero)
-        {
+        private void DashSkill(Creature hero) {
             Console.WriteLine(Name + "의 돌진 공격");
             hero.TakeDamage(AttackPower + DashPower);
         }

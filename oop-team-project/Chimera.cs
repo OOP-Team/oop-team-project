@@ -15,15 +15,12 @@ namespace oop_team_project
         public Chimera(string name)
             : base(name, 1800, 130, 0.1) { }
 
-        public override void ShowStatus()
-        {
+        public override void ShowStatus() {
             Console.WriteLine("1. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature hero)
-        {
-            switch (skillNumber)
-            {
+        public override void UseSkill(int skillNumber, Creature hero)  {
+            switch (skillNumber) {
                 case 1:
                     DashSkill(hero);
                     break;
@@ -38,27 +35,22 @@ namespace oop_team_project
             }
         }
 
-        public override void ShowSkills()
-        {
+        public override void ShowSkills() {
             Console.WriteLine("1. 돌진   (" + DashPower + " 추가피해)");
             Console.WriteLine("2. 할퀴기 (" + ClawPower + " 추가피해)");
             Console.WriteLine("3. 포이즌 (" + PoisonPower + " 추가피해)");
         }
 
-        private void DashSkill(Creature hero)
-        {
+        private void DashSkill(Creature hero) {
             Console.WriteLine(Name + "의 돌진!");
-            hero.TakeDamage(AttackPower + DashPower);
-        }
+            hero.TakeDamage(AttackPower + DashPower); }
 
-        private void ClawSkill(Creature hero)
-        {
+        private void ClawSkill(Creature hero) {
             Console.WriteLine(Name + "의 할퀴기!");
             hero.TakeDamage(AttackPower + ClawPower);
         }
 
-        private void PoisonSkill(Creature hero)
-        {
+        private void PoisonSkill(Creature hero)  {
             Console.WriteLine(Name + "의 포이즌!");
             hero.TakeDamage(AttackPower + PoisonPower);
             hero.TakeDamage(50, 3);

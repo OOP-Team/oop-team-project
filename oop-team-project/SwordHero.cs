@@ -12,15 +12,12 @@ namespace oop_team_project
         public SwordHero(string name)
             : base(name, 1400, 120, 0.1) {}
 
-        public override void ShowStatus()
-        {
+        public override void ShowStatus() {
             Console.WriteLine("1. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature monster)
-        {
-            switch (skillNumber)
-            {
+        public override void UseSkill(int skillNumber, Creature monster) {
+            switch (skillNumber) {
                 case 1:
                     ChargeSkill(monster);
                     break;
@@ -38,27 +35,23 @@ namespace oop_team_project
             }
         }
 
-        public override void ShowSkills()
-        {
+        public override void ShowSkills() {
             Console.WriteLine("1. 돌격  (" + ChargePower + " 추가피해)");
             Console.WriteLine("2. 회전베기  (" + SpinSlashPower + " 추가피해)");
             Console.WriteLine("3. 저지먼트  (" + JudgmentPower + " 추가피해)");
         }
 
-        private void ChargeSkill(Creature monster)
-        {
+        private void ChargeSkill(Creature monster) {
             Console.WriteLine(Name + " 이 돌격 공격");
             monster.TakeDamage(AttackPower + ChargePower);
         }
 
-        private void SpinSlashSkill(Creature monster)
-        {
+        private void SpinSlashSkill(Creature monster) {
             Console.WriteLine(Name + " 이 회전베기 공격");
             monster.TakeDamage(AttackPower + SpinSlashPower);
         }
 
-        private void JudgmentSkill(Creature monster)
-        {
+        private void JudgmentSkill(Creature monster) {
             Console.WriteLine(Name + " 이 저지먼트 공격");
             monster.TakeDamage(AttackPower + JudgmentPower);
         }

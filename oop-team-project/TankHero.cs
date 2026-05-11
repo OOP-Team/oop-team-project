@@ -10,8 +10,7 @@ namespace oop_team_project
         private bool isDefenseMode;
         private bool isTaunting;
 
-        public bool IsDefenseMode
-        {
+        public bool IsDefenseMode {
             get { 
                 return isDefenseMode; 
             }
@@ -25,7 +24,7 @@ namespace oop_team_project
             get { 
                 return isTaunting;
             }
-            private set { 
+            set { 
                 isTaunting = value; 
             }
         }
@@ -33,15 +32,12 @@ namespace oop_team_project
         public TankHero(string name)
             : base(name, 2200, 70, 0.3) {}
 
-        public override void ShowStatus()
-        {
+        public override void ShowStatus() {
             Console.WriteLine("3. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature monster)
-        {
-            switch (skillNumber)
-            {
+        public override void UseSkill(int skillNumber, Creature monster) {
+            switch (skillNumber) {
                 case 1:
                     IronDefenseSkill();
                     break;
@@ -59,34 +55,28 @@ namespace oop_team_project
             }
         }
 
-        public void TauntSkill()
-        {
+        public void TauntSkill() {
             IsTaunting = true;
             Console.WriteLine("도발을 사용합니다.");
         }
 
-        public override void ShowSkills()
-        {
+        public override void ShowSkills() {
             Console.WriteLine("1. 철벽방어 (팀 피해 50% 감소)");
             Console.WriteLine("2. 도발");
             Console.WriteLine("3. 방패던지기 (" + ShieldThrowPower + " 추가피해)");
         }
 
-        public void ResetTaunt()
-        {
-            if (isTaunting)
-            {
+        public void ResetTaunt() {
+            if (isTaunting) {
                 isTaunting = false;
                 Console.WriteLine(Name + "의 도발 효과가 해제되었습니다.");
             }
         }
 
-        public override void TakeDamage(int damage)
-        {
+        public override void TakeDamage(int damage) {
             int finalDamage = (int)(damage * (1 - DefenseRate));
 
-            if (IsDefenseMode)
-            {
+            if (IsDefenseMode) {
                 finalDamage /= 2;
                 Console.WriteLine("피해가 50% 감소합니다.");
             }
@@ -94,14 +84,12 @@ namespace oop_team_project
             base.TakeDamage(finalDamage);
         }
 
-        private void IronDefenseSkill()
-        {
+        private void IronDefenseSkill() {
             IsDefenseMode = true;
             Console.WriteLine("철벽 방어를 사용합니다.");
         }
 
-        private void ShieldThrowSkill(Creature monster)
-        {
+        private void ShieldThrowSkill(Creature monster) {
             Console.WriteLine("방패 던지기를 사용합니다.");
             monster.TakeDamage(AttackPower + ShieldThrowPower);
         }

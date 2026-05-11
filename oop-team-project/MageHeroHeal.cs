@@ -4,8 +4,7 @@ using System.Text;
 
 namespace oop_team_project
 {
-    internal interface MageHeroHeal
-    {
+    internal interface MageHeroHeal {
         void HealTeam(Team team);
     }
 }
