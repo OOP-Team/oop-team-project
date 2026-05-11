@@ -14,7 +14,7 @@ namespace oop_team_project
             : base(name, 2200, 70, 0.3) {}
 
         public override void ShowStatus() {
-            Console.WriteLine("3. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
+            Console.WriteLine("3. " + Name);
         }
 
         public override void UseSkill(int skillNumber, Creature monster) {

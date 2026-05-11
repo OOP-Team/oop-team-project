@@ -170,29 +170,30 @@ namespace oop_team_project
                 attacker.ShowSkills();
 
                 Console.Write("사용할 스킬 입력 : ");
+                Random r = new Random();
                 int skill = GetSafeInput();
-                Creature enemy = null;
-                if (attacker is TankHero && (skill == 1 || skill == 2)) {
+                int enemyIdx = GetSafeInput() - 1;
+
+                if (attacker is TankHero && (skill == 1 || skill == 2)){
                     attacker.UseSkill(skill, attacker);
                 }
-                else if (attacker is MageHero mage && skill == 3) {
+                else if (attacker is MageHero mage && skill == 3){
                     mage.HealTeam(userTeam);
-                } else {
+                }
+                else {
                     Console.Write("\n공격 대상 선택: ");
-                    int targetIndex = GetSafeInput() - 1;
-
-                    if (targetIndex < 0 || targetIndex >= enemyTeam.Members.Count) {
+                    
+                    if (enemyIdx < 0 || enemyIdx >= enemyTeam.Members.Count){
                         Console.WriteLine("잘못된 대상 선택입니다.");
                         return;
                     }
 
-                    Creature target = enemyTeam[targetIndex];
+                    Creature target = enemyTeam[enemyIdx];
 
-                    Random r = new Random();
-                    if (r.Next(0, 100) < 20) {
+                    if (r.Next(0, 100) < 20){
                         target.TakeDamage(attacker.AttackPower, "\n20% 확률 크리티컬 공격!\n");
                     }
-                    else {
+                    else{
                         attacker.UseSkill(skill, target);
                     }
                 }
@@ -289,7 +290,7 @@ namespace oop_team_project
             foreach (Creature monster in monsterTeam.Members) {
                 monster.ShowStatus();
             }
-
+             
             Console.WriteLine();
         }
 
