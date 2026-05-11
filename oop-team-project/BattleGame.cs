@@ -11,20 +11,6 @@ namespace oop_team_project
         private Team monsterTeam;
         private Random random;
         private int round = 1;
-        private static int GetSafeInput()
-        {
-            try {
-                return int.Parse(Console.ReadLine());
-            }
-            catch (FormatException) {
-                Console.WriteLine("숫자만 입력 가능합니다.");
-                return 0;
-            }
-            catch (OverflowException) {
-                Console.WriteLine("너무 큰 숫자입니다.");
-                return 0;
-            }
-        }
 
         public BattleGame()
         {
@@ -111,7 +97,7 @@ namespace oop_team_project
             }
         }
 
-        private void PlayerTurn(Team userTeam, Team enemyTeam) {
+        public void PlayerTurn(Team userTeam, Team enemyTeam) {
             try {
                 ShowStatus();
 
@@ -270,6 +256,24 @@ namespace oop_team_project
             }
             finally {
                 Console.WriteLine("적 턴 종료");
+            }
+        }
+
+        private static int GetSafeInput()
+        {
+            try
+            {
+                return int.Parse(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("숫자만 입력 가능합니다.");
+                return 0;
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("너무 큰 숫자입니다.");
+                return 0;
             }
         }
 

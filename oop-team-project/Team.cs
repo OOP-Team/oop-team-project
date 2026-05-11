@@ -13,7 +13,7 @@ namespace oop_team_project
             get { 
                 return members; 
             }
-            private set { 
+            set { 
                 members = value; 
             }
         }

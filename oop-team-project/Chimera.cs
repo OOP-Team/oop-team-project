@@ -13,7 +13,7 @@ namespace oop_team_project
         private int PoisonPower = 130;
 
         public Chimera(string name)
-            : base(name, 1800, 130, 0.1) { }
+            : base(name, 1800, 130, 0.1) {}
 
         public override void ShowStatus() {
             Console.WriteLine("1. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
