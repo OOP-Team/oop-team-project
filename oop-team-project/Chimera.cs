@@ -2,43 +2,66 @@
 using System.Collections.Generic;
 using System.Text;
 
+using System;
+
 namespace oop_team_project
 {
     internal class Chimera : Monster
     {
-        public Chimera()
-            : base("키메라", 1800, 130, 0.1) {}
+        private int DashPower = 70;
+        private int ClawPower = 100;
+        private int PoisonPower = 130;
+
+        public Chimera(string name)
+            : base(name, 1800, 130, 0.1) { }
 
         public override void ShowStatus()
         {
-            Console.WriteLine("키메라 HP : " + CurrentHp + "/" + MaxHp);
+            Console.WriteLine("1. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature target)
+        public override void UseSkill(int skillNumber, Creature hero)
         {
             switch (skillNumber)
             {
                 case 1:
-                    Console.WriteLine("돌진");
-                    target.TakeDamage(AttackPower + 70);
+                    DashSkill(hero);
                     break;
-
                 case 2:
-                    Console.WriteLine("할퀴기");
-                    target.TakeDamage(AttackPower + 100);
+                    ClawSkill(hero);
                     break;
-
                 case 3:
-                    Console.WriteLine("포이즌");
-                    target.TakeDamage(AttackPower + 130);
+                    PoisonSkill(hero);
                     break;
+                default:
+                    throw new SkillException("잘못된 스킬 번호입니다.");
             }
         }
+
         public override void ShowSkills()
         {
-            Console.WriteLine("1. 돌진   (70 추가피해)");
-            Console.WriteLine("2. 할퀴기 (100 추가피해)");
-            Console.WriteLine("3. 포이즌 (130 추가피해)");
+            Console.WriteLine("1. 돌진   (" + DashPower + " 추가피해)");
+            Console.WriteLine("2. 할퀴기 (" + ClawPower + " 추가피해)");
+            Console.WriteLine("3. 포이즌 (" + PoisonPower + " 추가피해)");
+        }
+
+        private void DashSkill(Creature hero)
+        {
+            Console.WriteLine(Name + "의 돌진!");
+            hero.TakeDamage(AttackPower + DashPower);
+        }
+
+        private void ClawSkill(Creature hero)
+        {
+            Console.WriteLine(Name + "의 할퀴기!");
+            hero.TakeDamage(AttackPower + ClawPower);
+        }
+
+        private void PoisonSkill(Creature hero)
+        {
+            Console.WriteLine(Name + "의 포이즌!");
+            hero.TakeDamage(AttackPower + PoisonPower);
+            hero.TakeDamage(50, 3);
         }
     }
 }

@@ -7,13 +7,18 @@ namespace oop_team_project
     internal delegate void DeathNotification(Creature deathCharacter);
     internal abstract class Creature : IComparable<Creature>
     {
+        public DeathNotification OnDead;
+        protected List<PoisonStatus> poisonChimeraAttack = new List<PoisonStatus>();
         private string name;
         private int currentHp;
         private int maxHp;
         private int attackPower;
         private double defenseRate;
-
-        public DeathNotification OnDead;
+        internal struct PoisonStatus
+        {
+            public int DamageTurn;
+            public int RemainTurn;
+        }
 
         /*
          * Property와 protedted setter를 사용하여 외부에서 직접 필드에 접근하지 못하도록 캡슐화
@@ -93,6 +98,11 @@ namespace oop_team_project
             DefenseRate = defenseRate;
         }
 
+        public int CompareTo(Creature other)
+        {
+            return other.CurrentHp.CompareTo(this.CurrentHp);
+        }
+
         public virtual void TakeDamage(int damage)
         {
             Console.WriteLine("들어온 공격력 : " + damage);
@@ -118,25 +128,26 @@ namespace oop_team_project
             TakeDamage(damage + 100);
         }
 
+        public virtual void TakeDamage(int damage, int duration)
+        {
+            Random rand = new Random();
+            if (rand.Next(0, 100) < 50)
+            {
+                Console.WriteLine( Name + "중독 상태");
+                poisonChimeraAttack.Add(new PoisonStatus { DamageTurn = damage, RemainTurn = duration });
+            }
+        }
+
         public virtual void Heal(int amount)
         {
             CurrentHp += amount;
             Console.WriteLine(Name + "가 " + amount + " 회복했습니다.");
         }
 
-        // 오버로드된 Heal 메서드로 회복 메시지를 출력할 수 있도록 함
         public virtual void Heal(int amount, string message)
         {
-            Random rand = new Random();
-            if (rand.Next(0, 100) < 20)
-            {
-                Console.WriteLine("럭키!" + message);
-                Heal(1000);
-            }
-            else
-            {
+                Console.WriteLine(message);
                 Heal(amount);
-            }
         }
 
 
@@ -144,7 +155,38 @@ namespace oop_team_project
         public abstract void UseSkill(int skillNumber, Creature target);
         public abstract void ShowSkills();
 
-        public int CompareTo(Creature other) => other.AttackPower.CompareTo(this.AttackPower);
+        public void UpdatePoisonStatus()
+        {
+            if (poisonChimeraAttack.Count == 0) {
+                return;
+            }
+
+
+            for (int i = poisonChimeraAttack.Count - 1; i >= 0; i--)
+            {
+                PoisonStatus effect = poisonChimeraAttack[i];
+
+                Console.WriteLine("\n키메라의 독에 중독 됨");
+                CurrentHp -= effect.DamageTurn;
+
+                effect.RemainTurn--;
+                if (effect.RemainTurn <= 0)
+                {
+                    poisonChimeraAttack.RemoveAt(i);
+                    Console.WriteLine("\n키메라의 중독 상태가 해제되었습니다.");
+                }
+                else
+                {
+                    poisonChimeraAttack[i] = effect;
+                    Console.WriteLine("중독 남은 턴: " + effect.RemainTurn);
+                }
+            }
+
+            if (IsDead)
+            {
+                OnDead?.Invoke(this);
+            }
+        }
 
 
         //out 키워드 메서드 (out 2개째 달성)
@@ -152,12 +194,6 @@ namespace oop_team_project
         {
             hp = CurrentHp;
             atk = AttackPower;
-        }
-
-        internal struct BattleHistory
-        {
-            public int DamageDealt;
-            public string SkillName;
         }
     }
 }

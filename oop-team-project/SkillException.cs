@@ -4,9 +4,9 @@ using System.Text;
 
 namespace oop_team_project
 {
-    internal class InvalidSkillException : Exception
+    internal class SkillException : Exception
     {
-        public InvalidSkillException(string message)
+        public SkillException(string message)
             : base(message) {}
     }
 }

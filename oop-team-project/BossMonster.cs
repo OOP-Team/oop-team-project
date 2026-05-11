@@ -7,40 +7,59 @@ namespace oop_team_project
 {
     internal class BossMonster : Monster
     {
-        public BossMonster()
-            : base("보스", 3000, 180, 0.2) {}
+        private int SoulStealPower = 150;
+        private int ChaosPower = 220;
+        private int JudgmentPower = 280;
+
+        public BossMonster(string name)
+            : base(name, 3000, 180, 0.2) { }
 
         public override void ShowStatus()
         {
-            Console.WriteLine("보스 HP : " + CurrentHp + "/" + MaxHp);
+            Console.WriteLine("2. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature target)
+        public override void UseSkill(int skillNumber, Creature hero)
         {
             switch (skillNumber)
             {
                 case 1:
-                    Console.WriteLine("영혼약탈");
-                    target.TakeDamage(AttackPower + 150);
+                    SoulStealSkill(hero);
                     break;
-
                 case 2:
-                    Console.WriteLine("카오스");
-                    target.TakeDamage(AttackPower + 220);
+                    ChaosSkill(hero);
                     break;
-
                 case 3:
-                    Console.WriteLine("심판");
-                    target.TakeDamage(AttackPower + 280);
+                    JudgmentSkill(hero);
                     break;
+                default:
+                    throw new SkillException("잘못된 스킬 번호입니다.");
             }
         }
 
         public override void ShowSkills()
         {
-            Console.WriteLine("1. 영혼약탈 (150 추가피해)");
-            Console.WriteLine("2. 카오스   (220 추가피해)");
-            Console.WriteLine("3. 심판     (280 추가피해)");
+            Console.WriteLine("1. 영혼약탈 (" + SoulStealPower + " 추가피해)");
+            Console.WriteLine("2. 카오스   (" + ChaosPower + " 추가피해)");
+            Console.WriteLine("3. 심판     (" + JudgmentPower + " 추가피해)");
+        }
+
+        private void SoulStealSkill(Creature hero)
+        {
+            Console.WriteLine(Name + "의 영혼약탈 공격");
+            hero.TakeDamage(AttackPower + SoulStealPower);
+        }
+
+        private void ChaosSkill(Creature hero)
+        {
+            Console.WriteLine(Name + "의 카오스 에너지 공격");
+            hero.TakeDamage(AttackPower + ChaosPower);
+        }
+
+        private void JudgmentSkill(Creature hero)
+        {
+            Console.WriteLine(Name + "의 최후의 심판");
+            hero.TakeDamage(AttackPower + JudgmentPower);
         }
     }
 }

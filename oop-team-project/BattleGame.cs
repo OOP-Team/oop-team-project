@@ -19,21 +19,15 @@ namespace oop_team_project
             }
             catch (FormatException)
             {
-                Console.WriteLine("숫자만 입력 가능합니다. (0으로 처리)");
+                Console.WriteLine("숫자만 입력 가능합니다.");
                 return 0;
             }
             catch (OverflowException)
             {
-                Console.WriteLine("너무 큰 숫자입니다. (0으로 처리)");
+                Console.WriteLine("너무 큰 숫자입니다.");
                 return 0;
             }
         }
-
-        public void LogInfo<T>(T data)
-        {
-            Console.WriteLine("LOG " + data.ToString());
-        }
-        public void LogInfo(string msg, int level) { Console.WriteLine("LV" + level + " LOG: " + msg); }
 
         public BattleGame()
         {
@@ -44,10 +38,10 @@ namespace oop_team_project
             heroTeam.AddMember(new SwordHero("검사"));
             heroTeam.AddMember(new MageHero("마법사"));
             heroTeam.AddMember(new TankHero("탱커"));
-
-            monsterTeam.AddMember(new Chimera());
-            monsterTeam.AddMember(new BossMonster());
-            monsterTeam.AddMember(new Dragon());
+                
+            monsterTeam.AddMember(new Chimera("키메라"));
+            monsterTeam.AddMember(new BossMonster("보스"));
+            monsterTeam.AddMember(new Dragon("드래곤"));
 
 
             foreach (Creature hero in heroTeam.Members)
@@ -62,6 +56,7 @@ namespace oop_team_project
 
         public void StartGame()
         {
+            Random luckyHeal = new Random();
             Console.WriteLine("무슨 팀을 선택하시겠습니까?");
             Console.WriteLine("1. 용사팀");
             Console.WriteLine("2. 보스팀");
@@ -82,8 +77,21 @@ namespace oop_team_project
                     PlayerTurn(monsterTeam, heroTeam);
                     EnemyTurn(heroTeam, monsterTeam);
                 }
+                if (luckyHeal.Next(0, 100) < 20)
+                {
+                    Console.WriteLine("\n<마법사의 패시브 발동! 용사팀 전체 200 회복>");
+
+                    foreach (Creature hero in heroTeam.Members)
+                    {
+                        if (!hero.IsDead)
+                        {
+                            hero.Heal(200);
+                        }
+                    }
+                }
+                heroTeam.Members.ForEach(m => m.UpdatePoisonStatus());
+                round++;
             }
-            round++;
 
             if (heroTeam.IsAllDead())
             {
@@ -95,63 +103,121 @@ namespace oop_team_project
             }
         }
 
-        private void PlayerTurn(Team myTeam, Team enemyTeam)
+        private void PlayerTurn(Team userTeam, Team enemyTeam)
         {
             try
             {
                 ShowStatus();
 
+                while (true)
+                {
+                    Console.WriteLine("\n[1] 공격하기  [2] 전장 전체 체력 순위 보기");
+                    Console.Write("메뉴 선택 : ");
+                    int menuInput = GetSafeInput();
+
+                    if (menuInput == 2)
+                    {
+                        List<Creature> allCharacters = heroTeam.Members
+                            .Concat(monsterTeam.Members)
+                            .ToList();
+
+                        allCharacters.Sort();
+
+                        Console.WriteLine("\n<전체 캐릭터 체력 순위>");
+                        allCharacters.ForEach(c => {
+                            string teamName = (c is Hero) ? "용사팀" : "몬스터팀";
+                            string lifeStatus = c.IsDead ? "사망" : c.CurrentHp + " / " + c.MaxHp;
+                            Console.WriteLine("[" + teamName + "] " + c.Name + " : " + lifeStatus);
+                        });
+                        Console.WriteLine();
+                        continue;
+                    }
+                    else if (menuInput == 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n잘못된 번호입니다. 다시 입력해주세요.");
+                    }
+                }
+
                 int currentHp;
-                int currentAtk;
-                myTeam[0].GetQuickStats(out currentHp, out currentAtk);
-                LogInfo("현재 " + myTeam[0].Name + " 상태 - HP: " + currentHp, 1);
+                int currentAttack;
+                userTeam[0].GetQuickStats(out currentHp, out currentAttack);
 
-                Console.WriteLine("캐릭터를 선택해주세요");
-                int attackerIndex = GetSafeInput() - 1; // [GetSafeInput 참조 발생]
+                Console.WriteLine("\n공격할 캐릭터를 선택해주세요 (1, 2, 3)");
+                Console.Write("입력 : ");
+                int attackerIndex = GetSafeInput() - 1;
 
-                Creature attacker = myTeam[attackerIndex];
+                if (attackerIndex < 0 || attackerIndex >= userTeam.Members.Count)
+                {
+                    Console.WriteLine("\n범위를 벗어난 입력입니다. 첫 번째 캐릭터로 진행합니다.");
+                    attackerIndex = 0;
+                }
+
+                Creature attacker = userTeam[attackerIndex];
+
+                if (attacker.IsDead)
+                {
+                    Console.WriteLine(attacker.Name + " 이미 사망하여 공격할 수 없습니다.");
+                    return;
+                }
+
+                Console.WriteLine();
                 attacker.ShowSkills();
 
-                Console.Write("스킬 입력 : ");
+                Console.Write("사용할 스킬 입력 : ");
                 int skill = GetSafeInput();
-
-                Console.WriteLine("공격 대상 선택");
-                int targetIndex = GetSafeInput() - 1;
-                Creature target = enemyTeam[targetIndex];
-
-                Random r = new Random();
-                if (r.Next(0, 100) < 20)
+                Creature enemy = null;
+                if (attacker is TankHero && skill == 2)
                 {
-                    target.TakeDamage(attacker.AttackPower, "20% 확률로 크리티컬");
+                    attacker.UseSkill(skill, attacker);
                 }
-                else
-                {
-                    attacker.UseSkill(skill, target);
-                }
+                else {
+                    Console.Write("\n공격 대상 선택: ");
+                    int targetIndex = GetSafeInput() - 1;
 
-                attacker.Heal(200, "20% 확률로 히어로팀 200 힐");
+                    if (targetIndex < 0 || targetIndex >= enemyTeam.Members.Count)
+                    {
+                        Console.WriteLine("잘못된 대상 선택입니다.");
+                        return;
+                    }
+
+                    Creature target = enemyTeam[targetIndex];
+
+                    Random r = new Random();
+                    if (r.Next(0, 100) < 20)
+                    {
+                        target.TakeDamage(attacker.AttackPower, "\n20% 확률 크리티컬 공격!\n");
+                    }
+                    else
+                    {
+                        attacker.UseSkill(skill, target);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("에러 발생: " + ex.Message);
+                Console.WriteLine("플레이어 턴 실행 중 오류 발생: " + ex.Message);
             }
         }
 
-        private void EnemyTurn(Team enemyTeam, Team targetTeam)
+        private void EnemyTurn(Team enemyTeam, Team userTeam)
         {
             Console.WriteLine("적 차례입니다.");
 
-            Creature attacker = enemyTeam.Members
+            Creature enemyAttacker = enemyTeam.Members
                 .Where(m => !m.IsDead)
                 .OrderBy(x => random.Next())
                 .First();
 
-            Creature target = targetTeam.Members
+            Creature user = userTeam.Members
                 .Where(m => !m.IsDead)
                 .OrderBy(x => random.Next())
                 .First();
 
-            attacker.UseSkill(random.Next(1, 4), target);
+            enemyAttacker.UseSkill(random.Next(1, 4), user);
         }
 
         private void ShowStatus()

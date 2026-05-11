@@ -6,6 +6,6 @@ namespace oop_team_project
 {
     internal interface TauntSkill
     {
-        void Taunt();
+        void TauntSkill();
     }
 }

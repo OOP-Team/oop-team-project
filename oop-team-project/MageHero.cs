@@ -6,33 +6,37 @@ using System;
 
 namespace oop_team_project
 {
-    internal class MageHero : Hero, UseSkillTarget, MageHeroHeal
+    internal class MageHero : Hero, UseSkill, MageHeroHeal
     {
+        private int HealTeamPower = 300;
+        private int FireBallPower = 120;
+        private int LightningPower = 180;
         public MageHero(string name)
             : base(name, 900, 180, 0.05) {}
 
         public override void ShowStatus()
         {
-            Console.WriteLine("마법사 " + Name + " HP : " + CurrentHp + "/" + MaxHp);
+            Console.WriteLine("2. " + Name + " HP : " + CurrentHp + "/" + MaxHp);
         }
 
-        public override void UseSkill(int skillNumber, Creature target)
+        public override void UseSkill(int skillNumber, Creature monster)
         {
             switch (skillNumber)
             {
                 case 1:
-                    FireBall(target);
+                    FireBallSkill(monster);
                     break;
 
                 case 2:
-                    Lightning(target);
+                    LightningSkill(monster);
                     break;
 
                 case 3:
+                    Heal(HealTeamPower, "치유!");
                     break;
 
                 default:
-                    throw new InvalidSkillException("잘못된 스킬 번호입니다.");
+                    throw new SkillException("잘못된 스킬 번호입니다.");
             }
         }
 
@@ -44,28 +48,28 @@ namespace oop_team_project
             {
                 if (!member.IsDead)
                 {
-                    member.Heal(300);
+                    member.Heal(HealTeamPower);
                 }
             }
         }
 
-        private void FireBall(Creature target)
-        {
-            Console.WriteLine(Name + " 가 파이어볼 공격");
-            target.TakeDamage(AttackPower + 120);
-        }
-
-        private void Lightning(Creature target)
-        {
-            Console.WriteLine(Name + " 가 라이트닝 공격");
-            target.TakeDamage(AttackPower + 180);
-        }
-
         public override void ShowSkills()
         {
-            Console.WriteLine("1. 파이어볼  (120 추가피해)");
-            Console.WriteLine("2. 라이트닝  (180 추가피해)");
-            Console.WriteLine("3. 전체회복  (팀 전체 300 회복)");
+            Console.WriteLine("1. 파이어볼  (" + FireBallPower + " 추가피해)");
+            Console.WriteLine("2. 라이트닝  (" + LightningPower + " 추가피해)");
+            Console.WriteLine("3. 전체회복  (팀 전체 " + HealTeamPower + " 회복)");
+        }
+
+        private void FireBallSkill(Creature monster)
+        {
+            Console.WriteLine(Name + " 가 파이어볼 공격");
+            monster.TakeDamage(AttackPower + FireBallPower);
+        }
+
+        private void LightningSkill(Creature monster)
+        {
+            Console.WriteLine(Name + " 가 라이트닝 공격");
+            monster.TakeDamage(AttackPower + LightningPower);
         }
     }
 }
