@@ -98,11 +98,18 @@ namespace oop_team_project
         public abstract void UseSkill(int skillNumber, Creature target);
         public abstract void ShowSkills();
 
+        public bool IsHero
+        {
+            get { 
+                return this is Hero; 
+            }
+        }
+
         public int CompareTo(Creature other) {
             return other.CurrentHp.CompareTo(this.CurrentHp);
         }
 
-        public virtual void TakeDamage(int damage) {
+        public virtual int TakeDamage(int damage) {
             Console.WriteLine("들어온 공격력 : " + damage);
             Console.WriteLine(Name + " 방어율 : " + (DefenseRate * 100) + "%");
 
@@ -118,11 +125,12 @@ namespace oop_team_project
                 Console.WriteLine(Name + " 사망했습니다.");
                 OnDead?.Invoke(this);
             }
+            return finalDamage;
         }
 
-        public virtual void TakeDamage(int damage, string effectName) {
+        public virtual int TakeDamage(int damage, string effectName) {
             Console.WriteLine(effectName + "발동! 추가 데미지 100 발생!");
-            TakeDamage(damage + 100);
+            return TakeDamage(damage + 100);
         }
 
         public virtual void TakeDamage(int damage, int duration) {

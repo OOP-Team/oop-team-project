@@ -1,8 +1,8 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-
-using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace oop_team_project
 {
@@ -59,12 +59,12 @@ namespace oop_team_project
 
         private void FireBallSkill(Creature monster) {
             Console.WriteLine(Name + " 가 파이어볼 공격");
-            monster.TakeDamage(AttackPower + FireBallPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, monster.TakeDamage(AttackPower + FireBallPower));
         }
 
         private void LightningSkill(Creature monster) {
             Console.WriteLine(Name + " 가 라이트닝 공격");
-            monster.TakeDamage(AttackPower + LightningPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, monster.TakeDamage(AttackPower + LightningPower));
         }
     }
 }

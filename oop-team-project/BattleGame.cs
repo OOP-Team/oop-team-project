@@ -10,6 +10,7 @@ namespace oop_team_project
         private Team heroTeam;
         private Team monsterTeam;
         private Random random;
+        public static BattlePowerResult battlePowerResult = new BattlePowerResult();
         private int round = 1;
 
         public BattleGame()
@@ -85,6 +86,7 @@ namespace oop_team_project
                 } else {
                     Console.WriteLine("용사팀 승리!");
                 }
+                battlePowerResult.PrintResult();
             }
             catch (SkillException ex) {
                 Console.WriteLine("스킬 오류 발생: " + ex.Message);
@@ -149,8 +151,7 @@ namespace oop_team_project
                 int currentHp;
                 int currentAttack;
 
-                if (round >= 2)
-                {
+                if (round >= 2) {
                     foreach (Creature member in monsterTeam.Members) {
                         if (member is BossMonster) {
                             int hp;
@@ -227,10 +228,8 @@ namespace oop_team_project
             }
         }
 
-        private void EnemyTurn(Team enemyTeam, Team userTeam)
-        {
-            try
-            {
+        private void EnemyTurn(Team enemyTeam, Team userTeam) {
+            try {
                 if (enemyTeam.IsAllDead()) {
                     return;
                 }
@@ -242,40 +241,40 @@ namespace oop_team_project
                     .OrderBy(x => random.Next())
                     .First();
 
-                Creature target = null;
+                Creature enemy = null;
 
                 foreach (Creature member in userTeam.Members) {
                     if (!member.IsDead && member is TankHero tank) {
                         if (tank.IsTaunting) {
-                            target = tank;
+                            enemy = tank;
                             break;
                         }
                     }
                 }
 
-                if (target != null) {
+                if (enemy != null) {
                     Console.WriteLine("\n<도발 효과!> "
                         + enemyAttacker.Name
                         + "이(가) 도발 중인 "
-                        + target.Name
+                        + enemy.Name
                         + "를 공격합니다!");
                 } else {
-                    target = userTeam.Members
+                    enemy = userTeam.Members
                         .Where(m => !m.IsDead)
                         .OrderBy(x => random.Next())
                         .First();
                 }
 
-                enemyAttacker.UseSkill(random.Next(1, 4), target);
+                enemyAttacker.UseSkill(random.Next(1, 4), enemy);
             }
             catch (InvalidOperationException) {
                 Console.WriteLine("공격 가능한 대상이 없습니다.");
             }
-            catch (SkillException ex) {
-                Console.WriteLine("몬스터 스킬 오류: " + ex.Message);
+            catch (SkillException e) {
+                Console.WriteLine("몬스터 스킬 오류: " + e.Message);
             }
-            catch (Exception ex) {
-                Console.WriteLine("EnemyTurn 오류 발생: " + ex.Message);
+            catch (Exception e) {
+                Console.WriteLine("EnemyTurn 오류 발생: " + e.Message);
             }
             finally {
                 Console.WriteLine("적 턴 종료");
@@ -284,17 +283,14 @@ namespace oop_team_project
 
         private static int GetSafeInput()
         {
-            try
-            {
+            try {
                 return int.Parse(Console.ReadLine());
             }
-            catch (FormatException)
-            {
+            catch (FormatException) {
                 Console.WriteLine("숫자만 입력 가능합니다.");
                 return 0;
             }
-            catch (OverflowException)
-            {
+            catch (OverflowException) {
                 Console.WriteLine("너무 큰 숫자입니다.");
                 return 0;
             }

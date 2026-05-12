@@ -43,17 +43,17 @@ namespace oop_team_project
 
         private void ChargeSkill(Creature monster) {
             Console.WriteLine(Name + " 이 돌격 공격");
-            monster.TakeDamage(AttackPower + ChargePower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, monster.TakeDamage(AttackPower + ChargePower));
         }
 
         private void SpinSlashSkill(Creature monster) {
             Console.WriteLine(Name + " 이 회전베기 공격");
-            monster.TakeDamage(AttackPower + SpinSlashPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, monster.TakeDamage(AttackPower + SpinSlashPower));
         }
 
         private void JudgmentSkill(Creature monster) {
             Console.WriteLine(Name + " 이 저지먼트 공격");
-            monster.TakeDamage(AttackPower + JudgmentPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, monster.TakeDamage(AttackPower + JudgmentPower));
         }
     }
 }

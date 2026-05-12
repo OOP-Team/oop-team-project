@@ -42,15 +42,19 @@ namespace oop_team_project
             Console.WriteLine("3. 방패던지기 (" + ShieldThrowPower + " 추가피해)");
         }
 
-        public override void TakeDamage(int damage) {
+        public override int TakeDamage(int damage)
+        {
             int finalDamage = (int)(damage * (1 - DefenseRate));
 
             if (IsDefenseMode) {
                 finalDamage /= 2;
-                Console.WriteLine("피해가 50% 감소합니다.");
+                Console.WriteLine(Name + "가 철벽 방어로 피해를 절반만 입습니다!");
             }
 
-            base.TakeDamage(finalDamage);
+            int actualDamage = (finalDamage > 0) ? finalDamage : 0;
+            CurrentHp -= actualDamage;
+            Console.WriteLine(Name + "가 " + actualDamage + "의 피해를 입었습니다. (남은 체력: " + CurrentHp + ")");
+            return actualDamage;
         }
 
         public bool IsDefenseMode {
@@ -92,7 +96,7 @@ namespace oop_team_project
 
         private void ShieldThrowSkill(Creature monster) {
             Console.WriteLine("방패 던지기를 사용합니다.");
-            monster.TakeDamage(AttackPower + ShieldThrowPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, monster.TakeDamage(AttackPower + ShieldThrowPower));
         }
     }
 }

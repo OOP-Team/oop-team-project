@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace oop_team_project
@@ -42,17 +43,17 @@ namespace oop_team_project
 
         private void SoulStealSkill(Creature hero) {
             Console.WriteLine(Name + "의 영혼약탈 공격");
-            hero.TakeDamage(AttackPower + SoulStealPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + SoulStealPower));
         }
 
         private void ChaosSkill(Creature hero) {
             Console.WriteLine(Name + "의 카오스 에너지 공격");
-            hero.TakeDamage(AttackPower + ChaosPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, TakeDamage(AttackPower + ChaosPower));
         }
 
         private void JudgmentSkill(Creature hero) {
             Console.WriteLine(Name + "의 최후의 심판");
-            hero.TakeDamage(AttackPower + JudgmentPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + JudgmentPower));
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-
-using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace oop_team_project
 {
@@ -43,16 +43,17 @@ namespace oop_team_project
 
         private void DashSkill(Creature hero) {
             Console.WriteLine(Name + "의 돌진!");
-            hero.TakeDamage(AttackPower + DashPower); }
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + DashPower));
+        }
 
         private void ClawSkill(Creature hero) {
             Console.WriteLine(Name + "의 할퀴기!");
-            hero.TakeDamage(AttackPower + ClawPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + ClawPower));
         }
 
         private void PoisonSkill(Creature hero)  {
             Console.WriteLine(Name + "의 포이즌!");
-            hero.TakeDamage(AttackPower + PoisonPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + PoisonPower));
             hero.TakeDamage(50, 3);
         }
     }

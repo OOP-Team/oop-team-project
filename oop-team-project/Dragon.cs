@@ -42,17 +42,17 @@ namespace oop_team_project
 
         private void BreathSkill(Creature hero) {
             Console.WriteLine(Name + "의 브레스 공격");
-            hero.TakeDamage(AttackPower + BreathPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + BreathPower));
         }
 
         private void WrathSkill(Creature hero) {
             Console.WriteLine(Name + "의 역린");
-            hero.TakeDamage(AttackPower + WrathPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + WrathPower));
         }
 
         private void DashSkill(Creature hero) {
             Console.WriteLine(Name + "의 돌진 공격");
-            hero.TakeDamage(AttackPower + DashPower);
+            BattleGame.battlePowerResult.AddDamage(IsHero, hero.TakeDamage(AttackPower + DashPower));
         }
     }
 }
