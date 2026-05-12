@@ -5,11 +5,10 @@ using System.Linq;
 
 namespace oop_team_project
 {
-    internal class Team
-    {
-        private List<Creature> members;
+    internal class Team<T> where T : Creature {
+        private List<T> members;
 
-        public List<Creature> Members {
+        public List<T> Members {
             get { 
                 return members; 
             }
@@ -19,12 +18,12 @@ namespace oop_team_project
         }
 
         public Team() {
-            Members = new List<Creature>();
+            Members = new List<T>();
         }
 
-        public Creature this[int index] => members[index];
+        public T this[int index] => members[index];
 
-        public void AddMember(Creature creature) {
+        public void AddMember(T creature) {
             Members.Add(creature);
         }
 

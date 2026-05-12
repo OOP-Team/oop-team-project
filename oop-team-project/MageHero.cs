@@ -33,7 +33,7 @@ namespace oop_team_project
             }
         }
 
-        public void HealTeam(Team team) {
+        public void HealTeam(Team<Creature> team) {
             try {
                 Console.WriteLine("팀원 모두에게 회복 스킬을 사용한다.");
 

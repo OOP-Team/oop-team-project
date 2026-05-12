@@ -7,8 +7,8 @@ namespace oop_team_project
 {
     internal class BattleGame
     {
-        private Team heroTeam;
-        private Team monsterTeam;
+        private Team<Creature> heroTeam;
+        private Team<Creature> monsterTeam;
         private Random random;
         public static BattlePowerResult battlePowerResult = new BattlePowerResult();
         private int round = 1;
@@ -16,8 +16,8 @@ namespace oop_team_project
         public BattleGame()
         {
             random = new Random();
-            heroTeam = new Team();
-            monsterTeam = new Team();
+            heroTeam = new Team<Creature>();
+            monsterTeam = new Team<Creature>();
 
             heroTeam.AddMember(new SwordHero("검사"));
             heroTeam.AddMember(new MageHero("마법사"));
@@ -99,7 +99,7 @@ namespace oop_team_project
             }
         }
 
-        public void PlayerTurn(Team userTeam, Team enemyTeam) {
+        public void PlayerTurn(Team<Creature> userTeam, Team<Creature> enemyTeam) {
             try {
                 ShowStatus();
 
@@ -228,7 +228,7 @@ namespace oop_team_project
             }
         }
 
-        private void EnemyTurn(Team enemyTeam, Team userTeam) {
+        private void EnemyTurn(Team<Creature> enemyTeam, Team<Creature> userTeam) {
             try {
                 if (enemyTeam.IsAllDead()) {
                     return;
