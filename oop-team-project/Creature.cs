@@ -136,15 +136,12 @@ namespace oop_team_project
         public virtual void TakeDamage(int damage, int duration) {
             Random rand = new Random();
 
-            if (rand.Next(0, 100) < 50) {
-                Console.WriteLine(Name + "중독 상태");
+            if (rand.Next(0, 100) < 50){
+                Console.WriteLine("\n상태이상 " + Name + " 키메라의 독에 중독되었습니다! (" + duration + "턴 지속)");
 
-                poisonChimeraAttack.Add(
-                    new PoisonStatus
-                    {
-                        DamageTurn = damage,
-                        RemainTurn = duration
-                    });
+                poisonChimeraAttack.Add(new PoisonStatus{DamageTurn = damage,RemainTurn = duration });
+            }else{
+                Console.WriteLine("\n" + Name + " 독 공격을 저지하여 중독되지 않았습니다.");
             }
         }
 
@@ -168,30 +165,32 @@ namespace oop_team_project
         }
 
         public void UpdatePoisonStatus() {
-            if (poisonChimeraAttack.Count == 0) {
-                return;
-            }
+            if (poisonChimeraAttack.Count == 0) return;
 
-            for (int i = poisonChimeraAttack.Count - 1; i >= 0; i--) {
+            for (int i = poisonChimeraAttack.Count - 1; i >= 0; i--)
+            {
                 PoisonStatus effect = poisonChimeraAttack[i];
 
-                Console.WriteLine("\n키메라의 독에 중독 됨");
-
                 CurrentHp -= effect.DamageTurn;
+                Console.WriteLine("[독 피해] " + Name + "이(가) 독으로 인해 " + effect.DamageTurn + "의 지속 피해를 입었습니다. (남은 HP: " + CurrentHp + "/" + MaxHp + ")");
+                BattleGame.battlePowerResult.AddDamage(!IsHero, effect.DamageTurn);
 
                 effect.RemainTurn--;
 
-                if (effect.RemainTurn <= 0) {
+                if (effect.RemainTurn <= 0)
+                {
                     poisonChimeraAttack.RemoveAt(i);
-                    Console.WriteLine("\n키메라의 중독 상태가 해제되었습니다.");
+                    Console.WriteLine("[해제] " + Name + "의 중독 상태가 해제되었습니다.");
                 }
-                else {
+                else
+                {
                     poisonChimeraAttack[i] = effect;
-                    Console.WriteLine("중독 남은 턴: " + effect.RemainTurn);
+                    Console.WriteLine("-> 중독 남은 턴: " + effect.RemainTurn);
                 }
             }
 
-            if (IsDead) {
+            if (IsDead)
+            {
                 OnDead?.Invoke(this);
             }
         }
