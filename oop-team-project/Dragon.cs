@@ -5,7 +5,7 @@ using System.Text;
 
 namespace oop_team_project
 {
-    internal class Dragon : Monster
+    internal class Dragon : Monster, UseSkill
     {
         private int BreathPower = 150;
         private int WrathPower = 200;

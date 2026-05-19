@@ -6,7 +6,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace oop_team_project
 {
-    internal class BossMonster : Monster
+    internal class BossMonster : Monster, UseSkill
     {
         private int SoulStealPower = 150;
         private int ChaosPower = 220;

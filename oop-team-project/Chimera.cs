@@ -6,7 +6,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace oop_team_project
 {
-    internal class Chimera : Monster
+    internal class Chimera : Monster, UseSkill
     {
         private int DashPower = 70;
         private int ClawPower = 100;
